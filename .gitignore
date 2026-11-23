@@ -1,26 +1,16 @@
-# Virtual environment
+﻿# Python
+__pycache__/
+*.py[cod]
 venv/
-.venv/
-
-# Environment variables (contains secret API key)
 .env
 
-# Python cache
-__pycache__/
-*.pyc
-*.pyo
-
-# SQLite database (local demo data)
-*.db
-*.sqlite
-*.sqlite3
-
-# VS Code settings
+# VS Code
 .vscode/
 
-# Windows
+# OS
+.DS_Store
 Thumbs.db
-Desktop.ini
 
-# Logs
-*.log
+# Database
+*.db
+*.sqlite3
