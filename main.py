@@ -2,10 +2,15 @@
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
+import traceback
+
+# আপনার llm_helper ফাইল থেকে ফাংশনটি ইম্পোর্ট করুন
+from llm_helper import get_ai_response 
 
 app = FastAPI()
 
-# CORS মিডলওয়্যার (ব্রাউজার থেকে রিকোয়েস্ট পাঠানোর জন্য অত্যন্ত জরুরি)
+# ১. CORS মিডলওয়্যার (এরর সমাধানের জন্য অত্যন্ত জরুরি)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"], 
@@ -14,21 +19,27 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# স্ট্যাটিক ফাইল (CSS, JS, ছবি) সার্ভ করার জন্য
+# ২. স্ট্যাটিক ফাইল সার্ভ করা
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
-# মূল পেজে index.html দেখানোর জন্য
+# ৩. মূল UI পেজ রেন্ডার করা
 @app.get("/")
 async def read_index():
     return FileResponse("static/frontend/index.html")
 
-# ---------------------------------------------------------
-# এখানে তোমার চ্যাট API এন্ডপয়েন্টটি থাকবে। 
-# ধরো তোমার script.js এ fetch('/chat') বলা আছে, তাহলে নিচের মতো হবে:
+# ৪. চ্যাট রিকোয়েস্টের ডেটা ফরম্যাট (Pydantic Model)
+class ChatRequest(BaseModel):
+    message: str
 
-# @app.post("/chat")
-# async def chat_endpoint(user_message: dict):
-#     # এখানে তোমার Gemini API কল করার লজিক থাকবে
-#     return {"response": "This is a dummy response"}
-
-# ---------------------------------------------------------
+# ৫. চ্যাট API এন্ডপয়েন্ট (কমেন্ট আউট করা ছিল, এটি এখন সচল)
+@app.post("/chat")
+async def chat_endpoint(request: ChatRequest):
+    try:
+        # llm_helper.py থেকে AI উত্তর জেনারেট করা
+        ai_reply = get_ai_response(request.message)
+        return {"reply": ai_reply}
+    except Exception as e:
+        # কোনো এরর হলে টার্মিনালে প্রিন্ট হবে এবং ক্লায়েন্টকে জানানো হবে
+        print(f"Error in chat endpoint: {e}")
+        traceback.print_exc()
+        return {"reply": f"Server Error: {str(e)}"}
