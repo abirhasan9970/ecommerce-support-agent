@@ -1,0 +1,85 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShopEasy Support Agent</title>
+    <link rel="stylesheet" href="/static/frontend/style.css">
+</head>
+<body>
+    <div class="chat-container">
+        <!-- Header -->
+        <header class="chat-header">
+            <div class="header-info">
+                <h1>ShopEasy AI Support</h1>
+                <p>Online | Replies instantly</p>
+            </div>
+        </header>
+
+        <!-- Chat Window -->
+        <main class="chat-window" id="chat-window">
+            <!-- Initial Welcome Message -->
+            <div class="message bot-message">
+                <div class="message-content">
+                    Hello! I'm your AI support assistant. How can I help you today? 
+                    You can ask about delivery, returns, or track your order.
+                </div>
+            </div>
+        </main>
+
+        <!-- Quick Actions (FAQ, Track, Recommend, Ticket) -->
+        <div class="quick-actions">
+            <button onclick="sendQuickMessage('What is the delivery charge?')">📦 Delivery Charge</button>
+            <button onclick="sendQuickMessage('What is your return policy?')">↩️ Return Policy</button>
+            <button onclick="openModal('order')">🚚 Track Order</button>
+            <button onclick="openModal('recommend')">⭐ Recommend Product</button>
+            <button onclick="openModal('ticket')">🆘 Human Support</button>
+        </div>
+
+        <!-- Input Area -->
+        <div class="input-area">
+            <input type="text" id="message-input" placeholder="Type your message here..." onkeypress="handleEnter(event)">
+            <button id="send-btn" onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    <!-- Modal for Order Tracking / Recommend / Ticket -->
+    <div id="modal-overlay" class="modal-overlay hidden">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeModal()">&times;</button>
+            
+            <!-- Order Tracking Form -->
+            <div id="form-order" class="form-section hidden">
+                <h2>Track Your Order</h2>
+                <input type="text" id="order-id-input" placeholder="Enter Order ID (e.g., ORD-1001)">
+                <button onclick="submitOrder()">Track</button>
+                <div id="order-result" class="result-box"></div>
+            </div>
+
+            <!-- Product Recommendation Form -->
+            <div id="form-recommend" class="form-section hidden">
+                <h2>Find a Product</h2>
+                <input type="number" id="budget-input" placeholder="Max Budget (e.g., 2000)">
+                <input type="text" id="category-input" placeholder="Category (e.g., Electronics, Clothing)">
+                <button onclick="submitRecommend()">Search</button>
+                <div id="recommend-result" class="result-box"></div>
+            </div>
+
+            <!-- Support Ticket Form -->
+            <div id="form-ticket" class="form-section hidden">
+                <h2>Create Support Ticket</h2>
+                <input type="text" id="ticket-name" placeholder="Your Name">
+                <input type="text" id="ticket-issue" placeholder="Issue Type (e.g., Refund, Complaint)">
+                <textarea id="ticket-message" placeholder="Describe your issue..."></textarea>
+                <button onclick="submitTicket()">Submit Ticket</button>
+                <div id="ticket-result" class="result-box"></div>
+            </div>
+        </div>
+    </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="/static/frontend/script.js"></script>
+    </body>
+</html>
+
+
