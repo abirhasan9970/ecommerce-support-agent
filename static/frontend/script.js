@@ -3,9 +3,6 @@ const messageInput = document.getElementById('message-input');
 const sendBtn = document.getElementById('send-btn');
 const modalOverlay = document.getElementById('modal-overlay');
 
-// API Base URL
-const response = await fetch('/chat', { ... });;
-
 // --- Chat Functions ---
 function addMessage(text, sender) {
     const msgDiv = document.createElement('div');
@@ -13,6 +10,7 @@ function addMessage(text, sender) {
     
     const contentDiv = document.createElement('div');
     contentDiv.classList.add('message-content');
+    // marked.parse ব্যবহারের জন্য HTML-এ marked.js লাইব্রেরি থাকতে হবে
     contentDiv.innerHTML = marked.parse(text);
     
     msgDiv.appendChild(contentDiv);
@@ -32,17 +30,22 @@ async function sendMessage() {
     const loadingMsg = chatWindow.lastElementChild;
     
     try {
-        const response = await fetch(`${API_URL}/chat`, {
+        // এখানে API_URL বাদ দিয়ে শুধু '/chat' দেওয়া হয়েছে
+        const response = await fetch('/chat', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ message: text })
         });
+        
+        if (!response.ok) throw new Error("Server error");
+        
         const data = await response.json();
         
         chatWindow.removeChild(loadingMsg); // Remove loading
         addMessage(data.reply, 'bot');
     } catch (error) {
-        chatWindow.removeChild(loadingMsg);
+        console.error(error);
+        if (loadingMsg.parentNode) chatWindow.removeChild(loadingMsg);
         addMessage("Error: Could not reach the server.", 'bot');
     }
 }
@@ -87,7 +90,7 @@ async function submitOrder() {
     resBox.innerHTML = "Loading...";
     
     try {
-        const response = await fetch(`${API_URL}/track-order`, {
+        const response = await fetch('/track-order', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ order_id: orderId })
@@ -114,7 +117,7 @@ async function submitRecommend() {
     resBox.innerHTML = "Searching...";
     
     try {
-        const response = await fetch(`${API_URL}/recommend`, {
+        const response = await fetch('/recommend', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ max_price: price, category: category })
@@ -153,7 +156,7 @@ async function submitTicket() {
     resBox.innerHTML = "Creating ticket...";
     
     try {
-        const response = await fetch(`${API_URL}/support-ticket`, {
+        const response = await fetch('/support-ticket', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ customer_name: name, message: message, issue_type: issue || "General" })
@@ -169,7 +172,3 @@ async function submitTicket() {
         resBox.innerText = "Error connecting to server.";
     }
 }
-
-
-
-
