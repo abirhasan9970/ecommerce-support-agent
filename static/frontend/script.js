@@ -4,7 +4,7 @@ const sendBtn = document.getElementById('send-btn');
 const modalOverlay = document.getElementById('modal-overlay');
 
 // API Base URL
-const API_URL = 'http://127.0.0.1:8000';
+const API_URL = 'https://ecommerce-support-agent-enqp.onrender.com';
 
 // --- Chat Functions ---
 function addMessage(text, sender) {
